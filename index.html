@@ -7,6 +7,8 @@
 <meta name="description" content="StudyNova AI — a personal learning space for school classes, quizzes, notes and study planning.">
 <title>StudyNova AI | My Learning Space</title>
 <style>
+[hidden]{display:none!important}
+
 :root{--bg:#f5f7fb;--surface:#fff;--surface2:#f0f2f8;--text:#182033;--muted:#68738a;--line:#e4e8f1;--accent:#635bff;--accent2:#8b5cf6;--good:#0f9f79;--shadow:0 14px 40px rgba(29,38,75,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}body.dark{--bg:#101321;--surface:#191e30;--surface2:#232a40;--text:#f4f6ff;--muted:#a8b0c7;--line:#30374e;--shadow:0 14px 40px #0003}
 button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #aaa5ff;outline-offset:2px}
@@ -55,7 +57,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-vis
     </select>
     <label class="field-label" for="loginBoard">Board</label><select class="field" id="loginBoard"><option>CBSE</option><option>ICSE / ISC</option><option>Bihar Board</option><option>UP Board</option><option>Other State Board</option><option>International / Other</option></select>
     <button class="primary" id="loginStart" style="width:100%;margin-top:16px">Continue to my class →</button>
-    <p class="small" id="loginMessage" style="margin-top:12px">Demo profile is stored only in this browser. This is not a secure online account.</p>
+    <p class="small" id="loginMessage" style="margin-top:12px">Your profile and study data are saved in this browser on this device.</p>
   </div>
 </div>
 <header class="topbar">
@@ -76,7 +78,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-vis
   <div class="section-head"><div><h2 id="classHeading">My class</h2><p id="classSubheading">Your selected class dashboard.</p></div></div>
   <div class="dash-hero"><div class="eyebrow" style="color:var(--accent)">YOUR LEARNING PATH</div><h2 id="dashTitle">Build your learning habit.</h2><p id="dashDescription">Practise a little every day.</p></div>
   <div class="section-head"><div><h2>Subjects for your class</h2><p>Choose a subject to start a note or practice.</p></div></div><div class="subject-grid" id="classSubjects"></div>
-  <div id="entrancePrep" class="prep-wrap" hidden><div class="section-head"><div><h2>Entrance exam practice</h2><p>Extra practice options for Class 11 and 12.</p></div></div><div class="tool-grid"><button class="tool-card" data-prep="NEET"><span class="emoji">🧬</span><h3>NEET Practice</h3><p>Starter biology, chemistry and physics practice.</p></button><button class="tool-card" data-prep="JEE"><span class="emoji">⚛️</span><h3>JEE Practice</h3><p>Starter maths, chemistry and physics practice.</p></button></div></div>
+  <div id="entrancePrep" class="prep-wrap" hidden><div class="section-head"><div><h2>Popular Exams</h2><p>NEET and JEE practice is available for Class 11 and Class 12 students.</p></div></div><div class="tool-grid"><button class="tool-card" data-prep="NEET"><span class="emoji">🧬</span><h3>NEET Practice</h3><p>Starter biology, chemistry and physics practice.</p></button><button class="tool-card" data-prep="JEE"><span class="emoji">⚛️</span><h3>JEE Practice</h3><p>Starter maths, chemistry and physics practice.</p></button></div></div>
   <div class="section-head"><div><h2>Your study toolkit</h2><p>Useful tools, all in one place.</p></div><button class="mini-link" data-page="settings">More →</button></div>
   <div class="tool-grid">
     <button class="tool-card" data-page="notes"><span class="emoji">📝</span><h3>My Notes</h3><p>Write and save revision notes.</p></button>
@@ -96,7 +98,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-vis
 </section>
 <section class="page" id="page-quiz">
   <div class="page-title"><button class="backbtn" data-page="dashboard">← My class</button><div><h1>❓ Quick Quizzes</h1><p id="quizSubtitle">Questions for your selected class.</p></div></div>
-  <div class="panel" style="max-width:760px;margin:auto"><div class="eyebrow" id="quizClassLabel" style="color:var(--accent)">CLASS QUIZ</div><label class="field-label" for="quizSubject">Subject</label><select class="field" id="quizSubject"></select><div class="row" style="justify-content:space-between;margin:16px 0 8px"><span class="small" id="quizCounter">Question 1</span><span class="small" id="quizScore">Attempts: 0</span></div><h2 id="quizQuestion">Choose a subject to begin.</h2><div id="quizOptions" style="display:grid;gap:10px"></div><p class="result" id="quizResult"></p><div class="row"><button class="primary" id="checkQuiz">Check answer</button><button class="secondary" id="nextQuiz">Next question →</button></div><p class="small">These are starter practice questions, not a complete official syllabus or mock test.</p></div>
+  <div class="panel" style="max-width:760px;margin:auto"><div class="eyebrow" id="quizClassLabel" style="color:var(--accent)">CLASS QUIZ</div><label class="field-label" for="quizSubject">Subject</label><select class="field" id="quizSubject"></select><div class="row" style="justify-content:space-between;margin:16px 0 8px"><span class="small" id="quizCounter">Question 1</span><span class="small" id="quizScore">Attempts: 0</span></div><h2 id="quizQuestion">Choose a subject to begin.</h2><div id="quizOptions" style="display:grid;gap:10px"></div><p class="result" id="quizResult"></p><div class="row"><button class="primary" id="checkQuiz">Check answer</button><button class="secondary" id="nextQuiz">Next question →</button></div><p class="small">Practice questions are for revision and do not represent a complete official syllabus.</p></div>
 </section>
 <section class="page" id="page-planner">
   <div class="page-title"><button class="backbtn" data-page="dashboard">← My class</button><div><h1>📅 Study Planner</h1><p>Plan one manageable task at a time.</p></div></div>
@@ -113,13 +115,13 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-vis
 </section>
 <section class="page" id="page-tutor">
   <div class="page-title"><button class="backbtn" data-page="dashboard">← My class</button><div><h1>🤖 AI Tutor</h1><p>Prepare a clear question for an AI assistant.</p></div></div>
-  <div class="panel" style="max-width:760px;margin:auto"><div class="dash-hero"><span class="eyebrow" style="color:var(--accent)">YOUR LEARNING COMPANION</span><h2>What would you like to understand?</h2><p>This starter page helps you organise a question; it is not connected to a live AI model.</p></div><label class="field-label" for="tutorQuestion">Your question</label><textarea class="field" id="tutorQuestion" rows="5" placeholder="e.g. Explain photosynthesis for my class..."></textarea><div class="row"><button class="primary" id="copyTutorQuestion">Copy question</button><button class="secondary" id="clearTutorQuestion">Clear</button></div><p class="result" id="tutorMessage"></p></div>
+  <div class="panel" style="max-width:760px;margin:auto"><div class="dash-hero"><span class="eyebrow" style="color:var(--accent)">YOUR LEARNING COMPANION</span><h2>What would you like to understand?</h2><p>Write a question here, then copy it into your preferred AI assistant to get help.</p></div><label class="field-label" for="tutorQuestion">Your question</label><textarea class="field" id="tutorQuestion" rows="5" placeholder="e.g. Explain photosynthesis for my class..."></textarea><div class="row"><button class="primary" id="copyTutorQuestion">Copy question</button><button class="secondary" id="clearTutorQuestion">Clear</button></div><p class="result" id="tutorMessage"></p></div>
 </section>
 <section class="page" id="page-settings">
   <div class="page-title"><button class="backbtn" data-page="dashboard">← My class</button><div><h1>⚙️ Settings</h1><p>My Profile and My Progress for your selected class.</p></div></div>
   <div class="settings-grid"><div class="panel"><h3>👤 My Profile</h3><div class="profile-line"><span class="muted">Student</span><strong id="profileName">Student</strong></div><div class="profile-line"><span class="muted">Selected class</span><strong id="profileGrade">Class 9</strong></div><div class="profile-line"><span class="muted">Board</span><strong id="profileBoard">CBSE</strong></div><p class="small">Your selected class is locked for this profile. To change class, sign out and select a new profile.</p><button class="secondary" id="switchProfile">Sign out / Switch student</button></div>
   <div class="panel"><h3>📈 My Progress</h3><p>These numbers belong to your selected class only.</p><div class="profile-line"><span class="muted">Quiz attempts</span><strong id="settingsQuizAttempts">0</strong></div><div class="profile-line"><span class="muted">Saved notes</span><strong id="settingsNotes">0</strong></div><div class="profile-line"><span class="muted">Completed tasks</span><strong id="settingsDone">0</strong></div><button class="primary" data-page="progress">Open full progress →</button></div></div>
-  <p class="small" style="margin-top:18px">Privacy note: this simple version stores its demo profile and learning data in this browser on this device. It does not create a secure online account or sync between devices.</p>
+  <p class="small" style="margin-top:18px">Privacy note: your profile and learning data are saved in this browser on this device. They do not sync between devices.</p>
 </section>
 <footer class="small" style="padding:30px 0 0;text-align:center">StudyNova AI · Learn at your own pace · Keep growing ✦</footer>
 </main>
@@ -191,7 +193,7 @@ function renderDashboard(){
  $("headerGrade").textContent=profile.grade;$("sideStudent").textContent=profile.name;$("sideGrade").textContent=profile.grade+" · "+profile.board;
  $("welcomeTitle").textContent="Welcome, "+profile.name+"!";$("welcomeText").textContent="Your personal learning space is ready. Keep learning one step at a time.";
  $("classHeading").textContent=profile.grade+" Dashboard";$("classSubheading").textContent="This dashboard is locked to your selected class.";
- $("entrancePrep").hidden=!(profile.grade==="Class 11"||profile.grade==="Class 12");
+ const selectedGrade=String(profile.grade||"").trim();$("entrancePrep").hidden=!(selectedGrade==="Class 11"||selectedGrade==="Class 12");
  $("dashTitle").textContent="Learn, practise and grow";
  $("dashDescription").textContent="Choose a subject, practise a quiz, save revision notes or plan your next study session.";
  const list=subjectsByGrade[profile.grade]||subjectsByGrade["Class 9"];
@@ -200,7 +202,7 @@ function renderDashboard(){
  $("taskSubject").innerHTML=list.map(s=>'<option>'+esc(s[1])+'</option>').join("")+'<option>General</option>';
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-start-subject]");if(!b)return;showPage("notes");$("noteSubject").value=b.dataset.startSubject;$("noteTitle").value=b.dataset.startSubject+" — Study Notes";$("noteBody").focus();});
-document.addEventListener("click",e=>{const b=e.target.closest("[data-prep]");if(!b)return;showPage("quiz");window.setTimeout(()=>{if($("quizSubtitle"))$("quizSubtitle").textContent=b.dataset.prep+" starter practice for "+profile.grade+" (sample questions).";},420);});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-prep]");if(!b)return;showPage("quiz");window.setTimeout(()=>{if($("quizSubtitle"))$("quizSubtitle").textContent=b.dataset.prep+" starter practice for "+profile.grade+" (practice questions).";},420);});
 function renderNotes(){
  const search=$("noteSearch").value.trim().toLowerCase(),filtered=notes.filter(n=>(n.title+" "+n.subject+" "+n.body).toLowerCase().includes(search));
  $("notesList").innerHTML=filtered.length?filtered.map(n=>'<article class="task"><strong>'+esc(n.title)+'</strong><div class="small">'+esc(n.subject)+'</div><p style="white-space:pre-wrap">'+esc(n.body).slice(0,1500)+'</p><button class="secondary" data-edit-note="'+esc(n.id)+'">Edit</button> <button class="secondary" data-delete-note="'+esc(n.id)+'">Delete</button></article>').join(""):'<p class="muted">'+(search?"No matching notes.":"Your saved notes will appear here.")+'</p>';
@@ -257,7 +259,7 @@ $("copyTutorQuestion").addEventListener("click",async()=>{const q=$("tutorQuesti
 $("clearTutorQuestion").addEventListener("click",()=>{$("tutorQuestion").value="";msg("tutorMessage","")});
 $("themeBtn").addEventListener("click",()=>{document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");$("themeBtn").textContent=d?"☀ Light":"☾ Theme";try{localStorage.setItem("studynova-dark",d?"yes":"no")}catch(e){}});
 try{if(localStorage.getItem("studynova-dark")==="yes"){document.body.classList.add("dark");$("themeBtn").textContent="☀ Light"}}catch(e){}
-function authSetupNotice(method){msg("authMessage",method+" is not connected yet. To make this secure and functional, configure Firebase Authentication (and the Google/Apple provider where applicable). No password or OTP has been sent.")}
+function authSetupNotice(method){msg("authMessage","Secure sign-in setup is required before this option can be used.")}
 ["googleLogin","appleLogin","emailOtp","emailLogin","forgotPassword"].forEach(id=>$(id).addEventListener("click",()=>authSetupNotice(({googleLogin:"Google / Gmail sign-in",appleLogin:"Apple sign-in",emailOtp:"Email OTP",emailLogin:"Email sign-in",forgotPassword:"Password reset"})[id])));
 $("headerSignOut").addEventListener("click",()=>$("switchProfile").click());
 $("loginStart").addEventListener("click",()=>{
