@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6558e8">
+<meta name="description" content="StudyNova AI — Study smarter with notes, quizzes, planning and a focus timer.">
+<title>StudyNova AI — Study Smarter</title>
+<style>
+:root{--bg:#f6f7ff;--card:#fff;--text:#20213a;--muted:#70738c;--accent:#6558e8;--border:#e7e7f3}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text);transition:.2s}
+body.dark{--bg:#141526;--card:#202137;--text:#f5f5ff;--muted:#b5b6d0;--border:#383952}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 6%;background:var(--card);border-bottom:1px solid var(--border)}
+.logo{font-size:22px;font-weight:800;color:var(--accent)}
+button,input,textarea,select{font:inherit}
+button{border:0;border-radius:10px;padding:11px 15px;background:var(--accent);color:white;cursor:pointer}
+button:hover{filter:brightness(.94)}
+.secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+main{max-width:1100px;margin:auto;padding:28px 18px}
+.hero{padding:30px 0 24px}
+.hero h1{font-size:clamp(30px,5vw,48px);margin:8px 0}
+.hero p,.muted{color:var(--muted);line-height:1.6}
+.tag{color:var(--accent);font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:18px;margin-top:22px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;min-width:0}
+.card h2{font-size:20px;margin-top:0}
+textarea,input,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);margin:7px 0 12px}
+textarea{min-height:125px;resize:vertical}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+#timer{font-size:42px;font-weight:800;text-align:center;margin:20px}
+.task{padding:10px 0;border-bottom:1px solid var(--border);overflow-wrap:anywhere}
+footer{text-align:center;color:var(--muted);padding:28px 15px}
+.small{font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">✦ StudyNova AI</div>
+  <button class="secondary" id="themeBtn">🌙 Dark mode</button>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="tag">YOUR PERSONAL STUDY SPACE</div>
+    <h1>Study Smarter.<br>Achieve More. 🚀</h1>
+    <p>Organise your notes, practise questions, plan your day and focus on your goals — all in one place.</p>
+  </section>
+
+  <section class="grid">
+    <article class="card">
+      <h2>📝 Notes Maker</h2>
+      <input id="noteTitle" placeholder="Note title">
+      <textarea id="noteText" placeholder="Write your study notes here..."></textarea>
+      <div class="actions">
+        <button id="saveNote">Save note</button>
+        <button class="secondary" id="clearNote">Clear</button>
+      </div>
+      <div id="notesList"></div>
+    </article>
+
+    <article class="card">
+      <h2>🧠 Quick Quiz</h2>
+      <p class="muted">Test yourself with this sample question.</p>
+      <p><strong>Which organelle produces most of a cell's ATP?</strong></p>
+      <div id="quizOptions">
+        <button class="secondary" data-answer="wrong">Nucleus</button>
+        <button class="secondary" data-answer="right">Mitochondrion</button>
+        <button class="secondary" data-answer="wrong">Ribosome</button>
+      </div>
+      <p id="quizResult" aria-live="polite"></p>
+      <button class="secondary" id="resetQuiz">Try again</button>
+    </article>
+
+    <article class="card">
+      <h2>📅 Study Planner</h2>
+      <input id="taskInput" placeholder="What do you need to study?">
+      <input id="taskDate" type="date" aria-label="Study date">
+      <button id="addTask">Add task</button>
+      <div id="tasksList"></div>
+    </article>
+
+    <article class="card">
+      <h2>⏳ Focus Timer</h2>
+      <p class="muted">Try a 25-minute study session.</p>
+      <div id="timer" role="timer">25:00</div>
+      <div class="actions">
+        <button id="startTimer">Start</button>
+        <button class="secondary" id="pauseTimer">Pause</button>
+        <button class="secondary" id="resetTimer">Reset</button>
+      </div>
+      <p class="small muted" id="timerStatus" aria-live="polite">Ready when you are.</p>
+    </article>
+  </section>
+  <p class="muted small">Your notes and tasks are saved in this browser on this device. Avoid saving private or sensitive information.</p>
+</main>
+
+<footer>StudyNova AI · Study Smarter. Achieve More.</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+$("themeBtn").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  $("themeBtn").textContent = document.body.classList.contains("dark")
+    ? "☀️ Light mode" : "🌙 Dark mode";
+});
+
+let notes = [];
+let tasks = [];
+try {
+  notes = JSON.parse(localStorage.getItem("studynova-notes") || "[]");
+  tasks = JSON.parse(localStorage.getItem("studynova-tasks") || "[]");
+  if (!Array.isArray(notes)) notes = [];
+  if (!Array.isArray(tasks)) tasks = [];
+} catch(e) { notes = []; tasks = []; }
+
+function renderNotes() {
+  $("notesList").replaceChildren();
+  notes.forEach((note, index) => {
+    const item = document.createElement("div");
+    item.className = "task";
+    const title = document.createElement("strong");
+    title.textContent = note.title;
+    const body = document.createElement("p");
+    body.textContent = note.text;
+    const del = document.createElement("button");
+    del.className = "secondary";
+    del.textContent = "Delete";
+    del.addEventListener("click", () => {
+      notes.splice(index, 1);
+      localStorage.setItem("studynova-notes", JSON.stringify(notes));
+      renderNotes();
+    });
+    item.append(title, body, del);
+    $("notesList").append(item);
+  });
+}
+$("saveNote").addEventListener("click", () => {
+  const title = $("noteTitle").value.trim();
+  const text = $("noteText").value.trim();
+  if (!title || !text) { alert("Please enter a title and some notes."); return; }
+  notes.unshift({title, text});
+  localStorage.setItem("studynova-notes", JSON.stringify(notes));
+  $("noteTitle").value = "";
+  $("noteText").value = "";
+  renderNotes();
+});
+$("clearNote").addEventListener("click", () => {
+  $("noteTitle").value = "";
+  $("noteText").value = "";
+});
+renderNotes();
+
+document.querySelectorAll("#quizOptions button").forEach(button => {
+  button.addEventListener("click", () => {
+    $("quizResult").textContent = button.dataset.answer === "right"
+      ? "✅ Correct! Mitochondria produce most of the cell's ATP."
+      : "❌ Not quite. Try again!";
+  });
+});
+$("resetQuiz").addEventListener("click", () => $("quizResult").textContent = "");
+
+function renderTasks() {
+  $("tasksList").replaceChildren();
+  tasks.forEach((task, index) => {
+    const item = document.createElement("div");
+    item.className = "task";
+    const label = document.createElement("label");
+    const check = document.createElement("input");
+    check.type = "checkbox";
+    check.checked = task.done;
+    check.style.width = "auto";
+    check.style.marginRight = "8px";
+    check.addEventListener("change", () => {
+      tasks[index].done = check.checked;
+      localStorage.setItem("studynova-tasks", JSON.stringify(tasks));
+      renderTasks();
+    });
+    const text = document.createElement("span");
+    text.textContent = (task.done ? "✓ " : "") + task.text +
+      (task.date ? " — " + task.date : "");
+    if (task.done) text.style.textDecoration = "line-through";
+    label.append(check, text);
+    const del = document.createElement("button");
+    del.className = "secondary";
+    del.textContent = "Delete";
+    del.addEventListener("click", () => {
+      tasks.splice(index, 1);
+      localStorage.setItem("studynova-tasks", JSON.stringify(tasks));
+      renderTasks();
+    });
+    item.append(label, document.createElement("br"), del);
+    $("tasksList").append(item);
+  });
+}
+$("addTask").addEventListener("click", () => {
+  const text = $("taskInput").value.trim();
+  if (!text) { alert("Enter a study task first."); return; }
+  tasks.push({text, date: $("taskDate").value, done: false});
+  localStorage.setItem("studynova-tasks", JSON.stringify(tasks));
+  $("taskInput").value = "";
+  renderTasks();
+});
+renderTasks();
+
+let remaining = 25 * 60;
+let interval = null;
+function showTimer() {
+  $("timer").textContent = String(Math.floor(remaining / 60)).padStart(2,"0")
+    + ":" + String(remaining % 60).padStart(2,"0");
+}
+$("startTimer").addEventListener("click", () => {
+  if (interval !== null) return;
+  if (remaining === 0) remaining = 25 * 60;
+  $("timerStatus").textContent = "Focus time — you've got this!";
+  interval = setInterval(() => {
+    remaining--;
+    showTimer();
+    if (remaining <= 0) {
+      clearInterval(interval);
+      interval = null;
+      $("timerStatus").textContent = "Session complete! Take a short break.";
+      alert("Focus session complete! Take a short break.");
+    }
+  }, 1000);
+});
+$("pauseTimer").addEventListener("click", () => {
+  clearInterval(interval);
+  interval = null;
+  $("timerStatus").textContent = "Timer paused.";
+});
+$("resetTimer").addEventListener("click", () => {
+  clearInterval(interval);
+  interval = null;
+  remaining = 25 * 60;
+  showTimer();
+  $("timerStatus").textContent = "Ready when you are.";
+});
+showTimer();
+</script>
+</body>
+</html>
